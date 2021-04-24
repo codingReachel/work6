@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>推荐歌单</title>
+    <script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
+    </script>
+    <script src="template.js"></script>
+    <link rel="stylesheet" href="css/推荐歌单.css">
+</head>
+
+<body>
+    <div class="pics">
+        <h1>推荐歌单</h1>
+        <ul id="box">
+
+        </ul>
+    </div>
+    <script type="text/html" id="pics">
+        {{each info}}
+        <li>
+            <a href=""><img src= {{$value.picUrl}} alt="好看"></a>
+            <span class="play">
+                <img src="images/播放.png" class="playButton">
+                <span class="playCounts">{{($value.playCount-($value.playCount%10000))/10000}}万</span>
+            </span>
+            <h4>{{$value.name}}</h4>
+        </li>
+        {{/each}}                                                                                                                      < /li>
+    </script>
+    <script>
+        var box = document.getElementById('box');
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:3000/personalized",
+            dataType: 'json',
+            contentType: 'application/json', // 设置参数类型
+            headers: {
+                'Content-Type': 'application/json',
+            }, // 设置请求头
+            xhrFields: {
+                withCredentials: true
+            }, // 跨域携带cookie
+            data: JSON.stringify({
+            }),
+            error: function (xhr, status) { // 错误处理
+                console.log(xhr, status);
+            },
+            success: function (data) { // 获取结果
+                var html = template('pics', {info: data.result})
+                box.innerHTML = html;
+            }
+        })
+    </script>
+</body>
+
+</html>
